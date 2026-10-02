@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "sa_name": "YOUR NAME EXACTLY AS IT APPEARS IN THE TECHNICAL OWNER FIELD",
+  "salesforce": {
+    "technical_owner_field": "Technical_Owner_Name__c",
+    "technical_lead_user_id": "YOUR 15- OR 18-CHARACTER SALESFORCE USER ID",
+    "churn_risk_field": "CONFIRMED API NAME FROM DESCRIBE_OBJECT, OR null"
+  },
+  "notion": {
+    "database_name": "YOUR CUSTOMER TRACKING DATABASE NAME",
+    "data_source_url": "collection://YOUR-DATA-SOURCE-ID"
+  },
+  "excluded_fields": [],
+  "known_account_aggregations": {},
+  "coverage_area_tracking": {
+    "enabled": false,
+    "owners_in_scope": []
+  }
+}

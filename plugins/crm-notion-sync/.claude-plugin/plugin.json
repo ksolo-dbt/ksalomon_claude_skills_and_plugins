@@ -1,0 +1,9 @@
+{
+  "name": "crm-notion-sync",
+  "version": "0.2.0",
+  "description": "Keep a Solutions Architect's Salesforce opportunities and personal Notion customer hub in sync, with a hard safety rule against touching opps you don't own.",
+  "author": {
+    "name": "Kyle Salomon"
+  },
+  "keywords": ["salesforce", "notion", "sync", "solutions-architect", "dbt-labs"]
+}
