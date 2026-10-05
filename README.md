@@ -1,24 +1,35 @@
 # Claude skills and plugins
 
-Claude skills and plugins for dbt Labs solutions architects.
+Claude tools for dbt Labs solutions architects. Each project lives in its own
+top-level folder with its own README and version.
 
-## Plugins
+## Projects
 
-| Plugin | What it does |
-|---|---|
-| [crm-notion-sync](plugins/crm-notion-sync/) | Keeps an SA's Salesforce opportunities and personal Notion customer hub in sync. Per-SA settings live on a Notion page, not in the plugin. |
+| Project | Runs in | What it does |
+|---|---|---|
+| [crm-notion-sync](crm-notion-sync/) | claude.ai (uploaded as a `.plugin` file) | Keeps an SA's Salesforce opportunities and personal Notion customer hub in sync. Per-SA settings live on a Notion page, not in the project. |
 
 ## Repo layout
 
-- `plugins/`: one folder per plugin, each with its own README.
+- `<project>/`: one folder per project, each with its own README.
 - `dist/`: packaged `.plugin` files for upload to claude.ai (not committed).
 - `private/`: personal values and notes (not committed).
 
-## Packaging a plugin
+Tools cloned from other people don't live here. Keep those as their own
+clones (for example under `~/Documents/claude-external-shared/`).
 
-Zip the contents of a plugin folder (not the folder itself), leaving out
+## Versioning
+
+Each project tracks its own version (for crm-notion-sync, `version` in
+`.claude-plugin/plugin.json`). Tag releases per project, for example
+`crm-notion-sync-v0.2.0`, and view one project's history with
+`git log -- <project>/`.
+
+## Packaging for claude.ai
+
+Zip the contents of the project folder (not the folder itself), leaving out
 `.DS_Store`:
 
 ```bash
-cd plugins/crm-notion-sync && zip -r ../../dist/crm-notion-sync.plugin . -x '*.DS_Store'
+cd crm-notion-sync && zip -r ../dist/crm-notion-sync.plugin . -x '*.DS_Store'
 ```
