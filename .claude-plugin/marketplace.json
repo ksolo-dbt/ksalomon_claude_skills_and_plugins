@@ -1,0 +1,13 @@
+{
+  "name": "ksalomon-claude-skills-and-plugins",
+  "owner": {
+    "name": "Kyle Salomon"
+  },
+  "plugins": [
+    {
+      "name": "crm-notion-sync",
+      "source": "./crm-notion-sync",
+      "description": "Keep a Solutions Architect's Salesforce opportunities and personal Notion customer hub in sync, with a hard safety rule against touching opps you don't own."
+    }
+  ]
+}
