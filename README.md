@@ -25,7 +25,18 @@ Each project tracks its own version (for crm-notion-sync, `version` in
 `crm-notion-sync-v0.2.0`, and view one project's history with
 `git log -- <project>/`.
 
-## Packaging for claude.ai
+## Installing and updating (marketplace)
+
+This repo is a plugin marketplace (`.claude-plugin/marketplace.json`). Each new
+project needs one more entry in that file.
+
+1. One time: in Claude Desktop, open Customize > Plugins > Add > Add
+   marketplace and point it at this GitHub repo.
+2. To update: edit the project, bump `version` in its
+   `.claude-plugin/plugin.json`, then commit and push.
+3. In Claude Desktop, open Customize > Plugins and select Check for updates.
+
+## Packaging for claude.ai (manual upload)
 
 Zip the contents of the project folder (not the folder itself), leaving out
 `.DS_Store`:
