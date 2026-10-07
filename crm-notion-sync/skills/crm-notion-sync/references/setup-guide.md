@@ -1,15 +1,25 @@
 # Setup Guide
 
-Run this guided first-time setup when no Notion page titled exactly
-**CRM sync settings** exists in the user's workspace. It discovers what it
-can, confirms every value with the user, and then creates the settings page.
-Nothing is saved until the user has confirmed every value.
+Run this guided first-time setup only when the user has said they don't
+have a CRM sync settings page yet (see "Load settings first" in `SKILL.md`).
+It discovers what it can, confirms every value with the user, and then
+creates the settings page. Nothing is saved until the user has confirmed every value.
 
 Every setting is documented in `references/settings-template.md`. Start from
 the structure in `references/settings.example.json` and keep its keys
 exactly.
 
-## 0. Connect Salesforce + Notion
+## 0. Confirm there's no existing settings page
+
+Don't search Notion for one. Unless the user already answered this in the
+current run, ask: "Have you already created your CRM sync settings page in
+Notion? If so, paste the link here. If not, I can walk you through
+first-time setup." Options: "Yes, I'll paste the link" / "No, set it up for
+me". If they paste a link, stop setup and load that page as a normal run
+would. Continue only on "No", and don't write anything before they've
+answered.
+
+## 0.5. Connect Salesforce + Notion
 
 Make sure both connectors are available in this session before starting. If
 a tool call fails with an auth error, ask the user to reconnect through their
@@ -97,6 +107,11 @@ will fail until they're added.
    code block, followed by the JSON in one code block with language JSON.
 3. Fetch the new page and parse it back, exactly as a normal run would, to
    confirm it loads. Give the user the page link.
+4. **Save-the-link tip (final step).** Display: "Tip: add this to your
+   Claude preferences (Settings > Profile / About me) so I find it
+   automatically next time: 'My crm-notion-sync settings page is <URL>.
+   Fetch it directly; don't search.'" with the new page's URL filled in.
+   Never write to preferences yourself.
 
 ## 4. First run
 
