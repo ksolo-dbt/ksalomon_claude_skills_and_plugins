@@ -1,6 +1,6 @@
 ---
 name: crm-notion-sync
-description: "Keep a dbt Labs Solutions Architect's Salesforce opportunities and personal Notion customer hub in sync. Use this whenever the user says \"run job 1\", \"run job 2\", \"run my sync\", \"check my opps\", \"full sync\", \"run everything\", \"run maintenance\", \"check my system\", or \"review my fields\" — or more generally whenever they want to reconcile their Salesforce pipeline with their Notion account notes, push Notion \"Technical Sales Process\" fields into Salesforce, or audit POV document links and picklist drift between the two systems. Per-SA settings live on a Notion page titled \"CRM sync settings\"; load them before running any job, and if no settings page exists, run first-time setup from references/setup-guide.md.\n"
+description: "Keep a dbt Labs Solutions Architect's Salesforce opportunities and personal Notion customer hub in sync. Use this whenever the user says \"run job 1\", \"run job 2\", \"run my sync\", \"check my opps\", \"full sync\", \"run everything\", \"run maintenance\", \"check my system\", or \"review my fields\" — or more generally whenever they want to reconcile their Salesforce pipeline with their Notion account notes, push Notion \"Technical Sales Process\" fields into Salesforce, or audit POV document links and picklist drift between the two systems. Per-SA settings live on a Notion page titled \"CRM sync settings\"; load them before running any job, using a saved link or by asking the user for it (never by searching Notion), and run first-time setup from references/setup-guide.md only if the user confirms they have no page.\n"
 ---
 
 # CRM ↔ Notion Sync (SA Operations)
@@ -14,20 +14,42 @@ It requires live Salesforce and Notion access (MCP connectors).
 Per-SA settings live on a Notion page in the SA's own workspace, never in
 this skill's files. **Before doing anything else**:
 
-1. Search Notion for a page titled exactly **CRM sync settings**. Ignore
-   results whose title isn't an exact match.
-2. **Exactly one page** → fetch it, parse the single JSON code block on it,
-   and validate it against `references/settings-template.md`.
-   **More than one** → list them (title, link, last edited) and ask the user
-   which to use. Never pick one yourself.
-   **None** → run guided first-time setup in `references/setup-guide.md`,
-   then continue with the job the user asked for.
-3. If the JSON is invalid, the page doesn't have exactly one JSON code block,
+1. **Known pointer.** If a CRM sync settings page URL or ID is already in
+   your context (user preferences / About me, memory, or the slash-command
+   arguments), fetch that page directly and validate it. No search and no
+   question. If the fetch fails (deleted, no access), say so and go to
+   step 2.
+2. **Otherwise, always ask before doing anything else**, using the question
+   tool if available: "Have you already created your CRM sync settings page
+   in Notion? If so, paste the link here. If not, I can walk you through
+   first-time setup." Options: "Yes, I'll paste the link" / "No, set it up
+   for me".
+   - **Link pasted** → fetch and validate it, then continue with the
+     requested job.
+   - **"No"** → run first-time setup in `references/setup-guide.md`, then
+     continue with the requested job.
+   If the user has more than one settings page, they choose by pasting the
+   link they want. Never pick one yourself.
+   If nobody can answer (a scheduled or otherwise unattended run), stop and
+   report that a settings link is needed. Don't run setup or any job.
+3. **Never search Notion for the settings page.** Search is semantic and
+   unreliable, and a missed result would send the user into setup again,
+   re-asking confirmed values and creating duplicate pages. Never run
+   first-time setup, and never write anything, until the user has answered
+   the step 2 question.
+4. If the JSON is invalid, the page doesn't have exactly one JSON code block,
    or a required value is missing or still placeholder text (ALL CAPS
    instructional text), stop. Tell the user exactly which value is wrong and
    how to fix it on the settings page. Don't guess or fill in values.
-4. Open every job summary with "Settings: {sa_name}, loaded from [page
+5. Open every job summary with "Settings: {sa_name}, loaded from [page
    link]" so the user can catch a wrong page.
+6. **Save-the-link tip.** After a completed first-time setup, and after any
+   run where the user pasted a link in step 2, end the summary with a short
+   note: "Tip: add this to your Claude preferences (Settings > Profile /
+   About me) so I find it automatically next time: 'My crm-notion-sync
+   settings page is <URL>. Fetch it directly; don't search.'" Fill in the
+   page's URL. Show it once per run. Never write to preferences yourself.
+   Don't show the tip when the link already came from preferences.
 
 **If settings can't be loaded, no job runs.** Job 2 and Maintenance Check
 write to Salesforce and must never run without a confirmed `sa_name` from the

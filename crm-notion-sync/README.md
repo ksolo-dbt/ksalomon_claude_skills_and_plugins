@@ -20,8 +20,11 @@ Your settings live on a Notion page in your own workspace, titled exactly
 plugin, so the plugin stays the same for every SA and you never need to edit
 it.
 
-The first time you say any trigger phrase, the skill looks for that page. If
-it doesn't find one, it walks you through setup:
+Each time you say a trigger phrase, unless your settings link is saved in
+your Claude preferences (see below), the skill asks whether you've already
+created that page. It never searches Notion for it, because search can
+miss the page and send you back into setup. If you have a page, paste its link
+and the skill loads it. If you don't, it walks you through setup:
 
 - finds your technical owner field and the exact way your name appears on
   your opps
@@ -37,6 +40,11 @@ create the page yourself: copy
 `skills/crm-notion-sync/references/settings.example.json`, fill it in using
 `skills/crm-notion-sync/references/settings-template.md`, and paste it into
 a JSON code block on a page titled **CRM sync settings**.
+
+To skip the question on future runs, add this to your Claude preferences
+(Settings > Profile / About me): "My crm-notion-sync settings page is <URL>.
+Fetch it directly; don't search." The skill shows this tip after setup or
+after you paste a link, and never edits your preferences itself.
 
 If settings can't be loaded or are incomplete, no job runs.
 
