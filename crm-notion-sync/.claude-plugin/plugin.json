@@ -1,6 +1,6 @@
 {
   "name": "crm-notion-sync",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Keep a Solutions Architect's Salesforce opportunities and personal Notion customer hub in sync, with a hard safety rule against touching opps you don't own.",
   "author": {
     "name": "Kyle Salomon"
