@@ -30,6 +30,8 @@ this skill's files. **Before doing anything else**:
      continue with the requested job.
    If the user has more than one settings page, they choose by pasting the
    link they want. Never pick one yourself.
+   If nobody can answer (a scheduled or otherwise unattended run), stop and
+   report that a settings link is needed. Don't run setup or any job.
 3. **Never search Notion for the settings page.** Search is semantic and
    unreliable, and a missed result would send the user into setup again,
    re-asking confirmed values and creating duplicate pages. Never run
