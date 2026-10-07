@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+
+- README: added a "Before you start" section covering the Notion customer hub
+  prerequisite (with a duplicable template and example page) and that notes
+  must live in Notion; other note apps aren't supported.
+
 ## 0.3.0
 
 - Settings discovery no longer searches Notion for the "CRM sync settings"

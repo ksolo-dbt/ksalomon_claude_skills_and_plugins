@@ -5,6 +5,28 @@ Notion customer hub in sync — pulling pipeline/ARR data into Notion, pushing
 your "Technical Sales Process" notes (next steps, POV health, deployment
 details, etc.) back into Salesforce, and auditing for drift in between.
 
+## Before you start
+
+You need three things in place before the plugin is useful:
+
+1. **A Notion customer hub.** The plugin reads and writes a Notion database
+   with one page per customer account, using specific property names and
+   types. Duplicate the template hub, then replace its sample accounts with
+   your own customers:
+   [Customer Hub template](https://app.notion.com/p/dbtlabs/34e42e75046c4b139dc0ea7828663b38?v=3f2bb38ebda78007804f000ce7d2dba6).
+   It's filtered to one fake example page showing a fully filled-out
+   customer note:
+   [Example customer page](https://app.notion.com/p/dbtlabs/Template-Page-3f0bb38ebda781399d4ef024d4051a7f?v=3f2bb38ebda78007804f000ce7d2dba6&source=copy_link).
+   If you build your own database instead, it must match the properties
+   listed in `skills/crm-notion-sync/references/setup-guide.md` (section 2)
+   and `skills/crm-notion-sync/references/field-mappings.md`. Setup checks
+   the schema and tells you what's missing, and jobs that use a missing
+   property fail.
+2. **Your notes in Notion.** Notion is the system of record for your
+   Technical Sales Process fields and SA Next Steps. This plugin doesn't read
+   notes from Google Drive or any other note-taking app.
+3. **Salesforce and Notion access.** Both connectors, as described below.
+
 ## Install
 
 1. Get the packaged `crm-notion-sync.plugin` file (built from this folder),
