@@ -85,8 +85,9 @@ Platform (multi_select), SA Account Health (select), Projected Opp/Renewal
 Close (date), No Opp/Renewal Open (checkbox), My Account (checkbox),
 Deprioritize (checkbox), CSA (person), Sales Director (person), Current ARR
 (number), Next Opp Delta ARR (number), Largest Delta ARR (number), Sales Play
-(select), Technical Sales Process (select — your own internal stage tracker,
-separate from Salesforce StageName).
+(select), Technical Sales Process (select — your own internal stage tracker;
+never written to Salesforce StageName, but compared against it read-only by
+the stage alignment check, see `references/stage-alignment.md`).
 
 **Technical Sales Process fields**: see
 `references/field-mappings.md` for the full list and exact types. Every
@@ -94,8 +95,13 @@ select field's options need to match your live Salesforce picklist — run
 Maintenance Check once you're connected to backfill any gaps (it auto-adds
 missing options, never auto-removes).
 
+**Optional (Fivetran cross-sell)**: Fivetran Customer (checkbox) and Fivetran
+Fit Tier (select: Strong, Maybe, Not a fit). Only needed if you're doing the
+Fivetran cross-sell motion; see `references/fivetran-crosssell-fields.md`. A
+missing optional property blocks nothing; mention it and move on.
+
 Missing properties don't block saving settings, but tell the user which jobs
-will fail until they're added.
+will fail until they're added (optional properties excepted).
 
 ## 3. Create the settings page
 
