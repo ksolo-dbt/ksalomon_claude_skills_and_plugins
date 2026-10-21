@@ -1,11 +1,11 @@
 ---
 name: crm-notion-sync
-description: "Keep a dbt Labs Solutions Architect's Salesforce opportunities and personal Notion customer hub in sync. Use this whenever the user says \"run job 1\", \"run job 2\", \"run my sync\", \"check my opps\", \"full sync\", \"run everything\", \"run maintenance\", \"check my system\", or \"review my fields\" — or more generally whenever they want to reconcile their Salesforce pipeline with their Notion account notes, push Notion \"Technical Sales Process\" fields into Salesforce, or audit POV document links and picklist drift between the two systems. Per-SA settings live on a Notion page titled \"CRM sync settings\"; load them before running any job, using a saved link or by asking the user for it (never by searching Notion), and run first-time setup from references/setup-guide.md only if the user confirms they have no page.\n"
+description: "Keep a dbt Labs Solutions Architect's Salesforce opportunities and personal Notion customer hub in sync. Use this whenever the user says \"run job 1\", \"run job 2\", \"run my sync\", \"check my opps\", \"full sync\", \"run everything\", \"run maintenance\", \"check my system\", \"review my fields\", \"check stage alignment\", or \"set up my Fivetran fields\" — or more generally whenever they want to reconcile their Salesforce pipeline with their Notion account notes, push Notion \"Technical Sales Process\" fields into Salesforce, or audit POV document links and picklist drift between the two systems. Per-SA settings live on a Notion page titled \"CRM sync settings\"; load them before running any job, using a saved link or by asking the user for it (never by searching Notion), and run first-time setup from references/setup-guide.md only if the user confirms they have no page.\n"
 ---
 
 # CRM ↔ Notion Sync (SA Operations)
 
-This skill runs five related jobs that keep a Solutions Architect's Salesforce
+This skill runs these related jobs that keep a Solutions Architect's Salesforce
 opportunities and their personal Notion customer-tracking database in sync.
 It requires live Salesforce and Notion access (MCP connectors).
 
@@ -82,7 +82,9 @@ authorization to skip it again.
 |---|---|
 | "Run Job 1" | SF → Notion sync + Coverage Area Tracking |
 | "Run Job 2" | Notion → SF sync (Technical Sales Process fields) |
-| "Full sync" / "Run everything" | Job 1 + Maintenance Check + Job 2, in sequence |
+| "Check stage alignment" | Stage alignment check only (read-only) |
+| "Set up my Fivetran fields" | Optional Fivetran fields starter (Notion-only) |
+| "Full sync" / "Run everything" | Job 1 (incl. stage alignment) + Maintenance Check + Job 2, in sequence |
 | "Run maintenance" / "Check my system" | Maintenance Check (POV link check + picklist drift check) |
 | "Review my fields" | Field Review (guided, one-off) |
 | "Run my sync" / "Check my opps" | Defaults to Job 1 + Maintenance Check |
@@ -100,6 +102,12 @@ authorization to skip it again.
   Deployment SKU comma/dash translation, lives in
   `references/field-mappings.md`. Read it before Job 2 or the picklist drift
   check — don't guess field API names.
+- **Stage alignment mapping**: `references/stage-alignment.md`. Read it
+  before the stage alignment check.
+- **Optional Fivetran cross-sell fields**: `Fivetran Customer` and
+  `Fivetran Fit Tier` are Notion-only, maintained by the SA by hand, and
+  never touched by Job 1, Job 2, Maintenance Check or Full Sync. Details in
+  `references/fivetran-crosssell-fields.md`.
 
 ## Job 1 — SF → Notion sync (read-only from Notion's perspective except numeric/date fields)
 
@@ -164,9 +172,53 @@ authorization to skip it again.
    - **Customer Journey** — only computed during Full Sync, not standalone
      Job 1. See the ordered rule list in `references/field-mappings.md`.
    - **Never touched by Job 1**: Platform (always manual), SA Account Health
-     (always manual), Technical Sales Process fields (Job 2's territory).
+     (always manual), Technical Sales Process fields (Job 2's territory), Fivetran Customer and Fivetran Fit Tier (optional,
+     SA-maintained, Notion-only).
 5. Present a grouped summary (✅ in sync / ⚠️ needs update / 🚫 no Notion
    page) before writing anything. Wait for confirmation.
+6. **Stage alignment** (unless `stage_alignment.enabled` is false in
+   settings; absent means enabled). Read-only: see the section below and add
+   its results to the summary.
+7. If `Fivetran Fit Tier` exists in the database schema, add one
+   informational line listing `My Account` = YES pages where it is blank.
+   Read-only, no writes, no prompts.
+
+## Stage alignment check (read-only)
+
+Runs in Job 1 and Full Sync, and on its own for "Check stage alignment".
+**It never writes to Salesforce or Notion and never offers to.** Stage is
+owned by the rep. The summary header says "Stage alignment: read-only, no
+changes made".
+
+Purpose: catch opps a Sales Director or account manager has moved into Scope,
+Technical Validation, or a later stage when the SA's own notes say technical
+validation isn't there yet.
+
+1. Reuse Job 1's query and matching. Apply the same exclusions first (skip
+   `Type = 'Cancel'`, skip opps whose `Owner.Name` doesn't match the
+   account's confirmed Sales Director), then compare each remaining open
+   opp's `StageName` against the Notion `Technical Sales Process` using
+   `references/stage-alignment.md`. If an account has several open opps, show
+   each opp's stage; don't collapse them.
+2. Output a "Stage alignment" section:
+   - ✅ In sync
+   - ⚠️ Salesforce is ahead of what the SA recorded, or the SA recorded
+     Tech Loss but the opp is still open
+   - ❓ Can't compare (empty Notion value, or a value the mapping marks
+     "can't compare")
+   Each ⚠️ line shows: account, opp name, Salesforce stage, the SA's
+   `Technical Sales Process`, opp owner (`Owner.Name`), and a suggested
+   action: "Raise with {Owner.Name}, or update Notion if Salesforce is
+   right." Also nudge the SA to update Notion if it is the stale side.
+
+## Fivetran fields starter (optional)
+
+Only on "Set up my Fivetran fields". Follow
+`references/fivetran-crosssell-fields.md`. It writes only `Fivetran Customer`
+and `Fivetran Fit Tier` in Notion, never Salesforce, and is not part of any
+job. Standing rules apply: show current → proposed with a reason, wait for
+confirmation before any write, never overwrite an existing value without
+being told to.
 
 ## Job 2 — Notion → SF sync (Technical Sales Process fields)
 
@@ -221,7 +273,8 @@ this is a judgment-call walkthrough, distinct from Maintenance Check.
 
 ## Full Sync ("Full sync" / "Run everything")
 
-Run Job 1 (including Customer Journey and Coverage Area Tracking) → Maintenance
+Run Job 1 (including Customer Journey, Coverage Area Tracking and the stage
+alignment check, which is read-only) → Maintenance
 Check → Job 2, in that order. Present one consolidated summary grouped by
 account, covering every field across all three jobs, before asking for a
 single confirmation.

@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0
+
+- New stage alignment check (Job 1, Full Sync, or "Check stage alignment").
+  Read-only alert when Salesforce `StageName` is Scope, Technical Validation
+  or later but the SA's Notion Technical Sales Process is behind, so the SA
+  can talk to the opp owner or update Notion. Never writes to Salesforce or
+  Notion. Mapping in `references/stage-alignment.md`; switchable with the
+  optional `stage_alignment.enabled` setting (default on, schema_version
+  still 1).
+- New optional Fivetran cross-sell fields guide
+  (`references/fivetran-crosssell-fields.md`) and a "Set up my Fivetran
+  fields" starter. `Fivetran Customer` and `Fivetran Fit Tier` are
+  Notion-only, SA-maintained, and never touched by the sync jobs. Schema
+  check lists them as optional.
+- Job 1 summary notes accounts with a blank Fivetran Fit Tier when the
+  property exists.
+
 ## 0.3.1
 
 - README: added a "Before you start" section covering the Notion customer hub

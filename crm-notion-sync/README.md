@@ -27,6 +27,13 @@ You need three things in place before the plugin is useful:
    notes from Google Drive or any other note-taking app.
 3. **Salesforce and Notion access.** Both connectors, as described below.
 
+**Optional: Fivetran cross-sell properties.** If you're doing the SA West
+Fivetran cross-sell motion, your hub can also have `Fivetran Customer`
+(checkbox) and `Fivetran Fit Tier` (select). They're Notion-only, maintained
+by you, and never touched by the sync jobs. See
+`skills/crm-notion-sync/references/fivetran-crosssell-fields.md`. The
+Customer Hub template should include them.
+
 ## Install
 
 1. Get the packaged `crm-notion-sync.plugin` file (built from this folder),
@@ -77,11 +84,13 @@ account matching looks right before anything writes to Salesforce.
 
 | Say this | It runs |
 |---|---|
-| "Run Job 1" | Salesforce → Notion sync, plus optional coverage-reassignment detection |
+| "Run Job 1" | Salesforce → Notion sync, stage alignment alert, plus optional coverage-reassignment detection |
 | "Run Job 2" | Notion → Salesforce sync for your Technical Sales Process fields |
 | "Run maintenance" / "Check my system" | POV document link check + Salesforce/Notion picklist drift check |
 | "Review my fields" | Guided, one-by-one field review (no automated diffing) |
-| "Full sync" / "Run everything" | All of the above in sequence, one combined summary |
+| "Check stage alignment" | Read-only alert when Salesforce shows Scope, Technical Validation or later but your Notion Technical Sales Process is behind |
+| "Set up my Fivetran fields" | Optional starter for the Fivetran cross-sell properties (Notion-only) |
+| "Full sync" / "Run everything" | Job 1 (including stage alignment), maintenance check and Job 2 in sequence, one combined summary |
 | "Run my sync" / "Check my opps" | Job 1 + maintenance check |
 
 ## The one rule that never bends
@@ -109,9 +118,11 @@ crm-notion-sync/
     ├── SKILL.md
     └── references/
         ├── field-mappings.md
+        ├── fivetran-crosssell-fields.md
         ├── settings-template.md
         ├── settings.example.json
-        └── setup-guide.md
+        ├── setup-guide.md
+        └── stage-alignment.md
 ```
 
 Everything the skill reads at runtime is inside `skills/crm-notion-sync/`,

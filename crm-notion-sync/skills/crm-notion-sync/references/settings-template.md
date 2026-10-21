@@ -105,3 +105,10 @@ Never fill in or guess a missing value.
   Sales Ops catches up, set `enabled` back to `false` rather than leaving
   stale names in the list.
 - **Example**: `{"enabled": true, "owners_in_scope": ["Alex Director", "Sam Director"]}`
+
+### `stage_alignment` (optional, default enabled)
+- **`enabled`**: `true` to run the read-only stage alignment check in Job 1
+  and Full Sync (see `references/stage-alignment.md`). Set `false` to turn
+  it off. If the key is absent, the check is enabled. The skill never adds
+  this key for you; it only mentions it as optional.
+- **Example**: `{"enabled": true}`

@@ -15,5 +15,8 @@
   "coverage_area_tracking": {
     "enabled": false,
     "owners_in_scope": []
+  },
+  "stage_alignment": {
+    "enabled": true
   }
 }
